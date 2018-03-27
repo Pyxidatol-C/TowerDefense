@@ -45,6 +45,7 @@ public class Node : MonoBehaviour
         // Build a turret.
         var turretToBuild = _buildManager.GetTurretToBuild();
         _turret = Instantiate(turretToBuild, transform.position + PositionOffset, transform.rotation);
+        _buildManager.SetTurretToBuild(null);
     }
 
     private void OnMouseExit()
