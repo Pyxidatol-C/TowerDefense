@@ -30,6 +30,11 @@ public class Turret : MonoBehaviour
 
     private void UpdateTarget()
     {
+        if (_target != null && Vector3.Distance(transform.position, _target.position) <= Range)
+        {
+            return;
+        }
+
         var enemies = GameObject.FindGameObjectsWithTag(EnemyTag);
         var shortestDistance = Mathf.Infinity;
         GameObject nearestEnemy = null;
@@ -86,7 +91,7 @@ public class Turret : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.grey;
         Gizmos.DrawWireSphere(transform.position, Range);
     }
 }
