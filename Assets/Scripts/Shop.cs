@@ -2,6 +2,8 @@
 
 public class Shop : MonoBehaviour
 {
+    public TurretBlueprint StandardTurret;
+    public TurretBlueprint MissileLauncher;
     private BuildManager _buildmanager;
 
     private void Start()
@@ -11,11 +13,25 @@ public class Shop : MonoBehaviour
 
     public void PurchaseStandardTurret()
     {
-        _buildmanager.SetTurretToBuild(_buildmanager.StandardTurretPrefab);
+        if (PlayerStats.Money < StandardTurret.Cost)
+        {
+            Debug.Log("Nope.");
+            return;
+        }
+        _buildmanager.SetTurretToBuild(StandardTurret);
+        PlayerStats.Money -= StandardTurret.Cost;
+        Debug.Log("Money left: " + PlayerStats.Money);
     }
 
     public void PurchaseMissileLauncher()
     {
-        _buildmanager.SetTurretToBuild(_buildmanager.MissileLauncherPrefab);
+        if (PlayerStats.Money < StandardTurret.Cost)
+        {
+            Debug.Log("Nope.");
+            return;
+        }
+        _buildmanager.SetTurretToBuild(MissileLauncher);
+        PlayerStats.Money -= MissileLauncher.Cost;
+        Debug.Log("Money left: " + PlayerStats.Money);
     }
 }

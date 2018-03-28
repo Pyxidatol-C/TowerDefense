@@ -6,7 +6,9 @@ public class Node : MonoBehaviour
     public Color HoverColor;
     public Vector3 PositionOffset;
 
-    private GameObject _turret;
+    [Header("Optional")]
+    // You can set pre-placed turret here.
+    public GameObject Turret;
 
     private Renderer _renderer;
     private Color _startColor;
@@ -20,32 +22,39 @@ public class Node : MonoBehaviour
         _buildManager = BuildManager.Instance;
     }
 
+    public Vector3 BuildPosition
+    {
+        get { return transform.position + PositionOffset; }
+    }
+
     private void OnMouseEnter()
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
-        if (_buildManager.GetTurretToBuild() == null)
+        if (!_buildManager.CanBuild)
             return;
         _renderer.material.color = HoverColor;
     }
 
     private void OnMouseDown()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
-            return;
-        if (_buildManager.GetTurretToBuild() == null)
-            return;
-        if (_turret != null)
+        if (EventSystem.current.IsPointerOverGameObject() || !_buildManager.CanBuild)
         {
-            // TODO display on screen
-            Debug.Log("NOPE.");
+            // Refund the money.
+            PlayerStats.Money += _buildManager.TurretToBuild.Cost;
+            Debug.Log("Money left: " + PlayerStats.Money);
             return;
         }
 
-        // Build a turret.
-        var turretToBuild = _buildManager.GetTurretToBuild();
-        _turret = Instantiate(turretToBuild, transform.position + PositionOffset, transform.rotation);
-        _buildManager.SetTurretToBuild(null);
+        if (Turret != null)
+        {
+            // Refund the money.
+            PlayerStats.Money += _buildManager.TurretToBuild.Cost;
+            Debug.Log("Money left: " + PlayerStats.Money);
+            return;
+        }
+
+        _buildManager.BuildTurretOn(this);
     }
 
     private void OnMouseExit()
